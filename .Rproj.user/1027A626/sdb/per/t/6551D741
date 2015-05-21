@@ -1,0 +1,16 @@
+{
+    "contents" : "######################################################################################################\n# plot4.R\n#\n# Across the United States, how have emissions from coal combustion-related sources changed \n# from 1999–2008?\n######################################################################################################\n#\n# Known Issues\n# 2015-05-21: Needs more color to show plotted points.\n######################################################################################################\n\n\nrequire(dplyr)\n\nif(!file.exists(\"./data\")) {dir.create(\"./data\")}\n\nfileURL <- \"https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip\"\n\nsourceFile <- \"exdata-data-NEI_data.zip\"\nneiFile  <- \"./data/summarySCC_PM25.rds\"\nsccFile <- \"./data/Source_Classification_Code.rds\"\n\n# Download file and extract it.\nif(!file.exists(sourceFile)) {\n    if (Sys.info()['sysname'] == \"Windows\") {\n        # needed for my Windows PC\n        download.file(fileURL, destfile=sourceFile)\n    } else {\n        # needed for my Mac\n        download.file(fileURL, destfile=sourceFile, method = \"curl\")\n    }\n    unzip(sourceFile, exdir=\"./data\", junkpaths=TRUE)\n}\n\nif (exists(\"NEI\") == FALSE) {\n    NEI <- readRDS(neiFile)\n}\nif (exists(\"SCC\") == FALSE) {\n    SCC <- readRDS(sccFile)\n}\n\n# Convert Character data to factor\nSCC$SCC <- as.character(SCC$SCC)\n\ncoal <- grepl (\"Coal\", SCC$Short.Name)\ncombust <- grepl(\"Comb\", SCC$Short.Name)\ncoal_comb <- SCC[which(with(SCC, coal & combust)),\"SCC\"]\n\nem <- data.frame(NEI$year, NEI$Emissions, NEI$SCC)\nnames(em) <- c(\"year\",\"Emissions\",\"SCC\")\nem$SCC <- as.character(em$SCC)\n\n#df <- inner_join(em, coal_comb, by = \"SCC\")\n\n\n\n#png(\"plot1.png\", width=480, height=480)\n\n\n#dat <- by(df$\"Emissions\"/1000, INDICES=df$year, FUN=sum)\n#barplot(dat\n#      , main = \"Total PM2.5 Emissions in United States\"\n#      , xlab=\"Year\"\n#      , ylab=\"Total PM2.5 Emissions in kilotons\"\n#     )\n#\n\n\n\n#dev.off()",
+    "created" : 1432236794912.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "4078931903",
+    "id" : "6551D741",
+    "lastKnownWriteTime" : 1432244895,
+    "path" : "C:/Users/hlt/GitHub/ExData_Proj2/plot4.R",
+    "project_path" : "plot4.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}

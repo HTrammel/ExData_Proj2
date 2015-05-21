@@ -1,0 +1,17 @@
+{
+    "contents" : "######################################################################################################\n# plot2.R\n#\n# Have total emissions from PM2.5 decreased in the Baltimore City, Maryland (fips == \"24510\") from \n# 1999 to 2008? Use the base plotting system to make a plot answering this question.\n######################################################################################################\n#\n# Known Issues\n# 2015-05-21: Needs more color to show plotted points.\n######################################################################################################\n\n\nrequire(dplyr)\n\nif(!file.exists(\"./data\")) {dir.create(\"./data\")}\n\nfileURL <- \"https://d396qusza40orc.cloudfront.net/exdata%2Fdata%2FNEI_data.zip\"\n\nsourceFile <- \"exdata-data-NEI_data.zip\"\nneiFile  <- \"./data/summarySCC_PM25.rds\"\nsccFile <- \"./data/Source_Classification_Code.rds\"\n\n# Download file and extract it.\nif(!file.exists(sourceFile)) {\n    if (Sys.info()['sysname'] == \"Windows\") {\n        # needed for my Windows PC\n        download.file(fileURL, destfile=sourceFile)\n    } else {\n        # needed for my Mac\n        download.file(fileURL, destfile=sourceFile, method = \"curl\")\n    }\n    unzip(sourceFile, exdir=\"./data\", junkpaths=TRUE)\n}\n\nif (exists(\"NEI\") == FALSE) {\n    NEI <- readRDS(neiFile)\n}\n\nNEI$year <- as.factor(NEI$year)\ndf <- NEI %>% filter(fips == '24510') %>% select(one_of(c(\"year\",\"Emissions\")))\n\n#png(\"plot1.png\", width=480, height=480)\n\n\ndat <- by(df$\"Emissions\", INDICES=df$year, FUN=sum)\nbarplot(dat\n     , main = \"Total PM2.5 Emissions in Baltimore\"\n     , xlab=\"Year\"\n     , ylab=\"Total PM2.5 Emissions in Tons\"\n     )\n\n\n\n\n#dev.off()",
+    "created" : 1432226910711.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1466421409",
+    "id" : "3FB037C2",
+    "lastKnownWriteTime" : 1432236890,
+    "path" : "C:/Users/hlt/GitHub/ExData_Proj2/plot2.R",
+    "project_path" : "plot2.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
